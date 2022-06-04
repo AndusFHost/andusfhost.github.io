@@ -5,3 +5,22 @@ body {
 h1, h2, h3, h4 {
     color: rgb(89, 169, 172);
 }
+
+a:link {
+    text-decoration: none;
+    color: rgb(255, 192, 203);
+}
+
+a:visited {
+    text-decoration: none;
+    color: rgb(255, 105, 180);
+}
+
+a:hover {
+    text-decoration: underline;
+    color: rgb(255, 129, 192);
+}
+
+a:active {
+    text-decoration: underline;
+}
