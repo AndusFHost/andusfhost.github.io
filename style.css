@@ -8,6 +8,7 @@ h1, h2, h3, h4 {
 
 h1.title {
     margin: auto;
+    text-align: center;
     width: 50%;
     border: 3px solid rgb(0, 177, 184);
     padding: 10px;
