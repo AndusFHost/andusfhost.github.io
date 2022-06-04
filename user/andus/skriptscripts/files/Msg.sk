@@ -1,0 +1,36 @@
+options:
+    server: &b[&3&lYourServer&b]
+    servernoformat: &3&lYourServer
+
+on join:
+    set {andus.chat.players.online} to number of all players
+    send "&b|----- {@servernoformat} &b-----|", "&bWelcome to {@servernoformat}!" and "  &bThere are &3&l%{andus.chat.players.online}% online players now"
+
+command /message [<offlineplayer>] [<text>]:
+    aliases: msg
+    trigger:
+        if arg 1 is set:
+            if arg 2 is set:
+                send "&7[&b&l%player% &3> &b&lYou&7] &8:: &7%arg 2%" to arg 1
+                send "&7[&b&lYou &3> &b&l%arg 1%&7] &8:: &7%arg 2%" to player
+                set {anmsg::%player's uuid%::reply} to arg 1
+                set {anmsg::%uuid of arg 1%::reply} to player
+            else:
+                send "{@server} &cCommand Usage: &a&l/msg &2&l<player> <message>" to player
+        else:
+            send "{@server} &cCommand Usage: &a&l/msg &2&l<player> <message>" to player
+
+command /reply [<text>]:
+    aliases: r
+    trigger:
+        if arg 1 is set:
+            if {anmsg::%player's uuid%::reply} is set:
+                if {anmsg::%player's uuid%::reply} is online:
+                    send "&7[&b&l%player% &3> &b&lYou&7] &8:: &7%arg 1%" to {anmsg::%player's uuid%::reply}
+                    send "&7[&b&lYou &3> &b&l%{anmsg::%player's uuid%::reply}%&7] &8:: &7%arg 1%"
+                else:
+                    send "{@server} &cPlayer &c&l%{anmsg::%player's uuid%::reply}% &c is offline"
+            else:
+                send "{@server} &cYou don't have anyone to reply to!"
+        else:
+            send "{@server} &cCommand Usage: &a&l/r &2&l<wiadomosc>"

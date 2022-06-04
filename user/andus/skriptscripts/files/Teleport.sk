@@ -1,0 +1,51 @@
+command /tpa <player>:
+	trigger:
+		if arg-1 is set:
+			if arg-1 is not player:
+				if arg-1 is online:
+					set {request.%arg-1%} to player
+					send "&aSent request to &e%arg-1%&r. " to player
+					send "&e%player%&a wants to teleport" to arg-1
+					send formatted "<tooltip:&aAccept><command:/tpyes>&aAccept <reset>or<reset> <tooltip:&cDeny><command:/tpdeny>&cDeny" to arg-1
+					set {requestpending.%arg-1%} to true
+				else:
+					send "&c&lPlayer is not online!"
+			else:
+				send "&c&lYou can't teleport to yourself"
+		else: 
+			send "&c&lSelect a player"
+		
+
+command /tpyes:
+    aliases: tpaccept
+	trigger:
+		if {request.%player%} is set: 
+			teleport {request.%player%} to player
+			send "&aYou've got teleported to &e%player%&a." to {request.%player%}
+			clear {request.%player%}
+			set {requestpendingcount.%player%} to 0
+			set {requestpending.%player%} to false
+			send "&aYou accepted the teleport"
+		else:
+			send "&4Teleport timed out"
+
+
+
+command /tpdeny: 
+	trigger: 
+		if {request.%player%} is set: 
+			send "&e%player%&4 denied the teleport!" to {request.%player%}
+
+			send "&cYou denied &e%{request.%player%}%'s &cteleport" to player
+			set {requestpendingcount.%player%} to 0
+			clear {request.%player%}
+			set {requestpending.%player%} to false
+		else:
+			send "&4Teleport timed out"
+
+every second: 
+	loop all players: 
+		if {requestpending.%loop-player%} is true: 
+			add 1 to {requestpendingcount.%loop-player%}
+			if {requestpendingcount.%loop-player%} >= 120:
+				loop-player command "tpdeny"

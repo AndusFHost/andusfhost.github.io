@@ -1,0 +1,30 @@
+options:
+  prefix: &3[&b&lYourServer&3]
+
+on join:
+  set join message to "&7[&a+&7] &b&l%player%"
+
+on quit:
+  set leave message to "&7[&c-&7] &b&l%player%"
+
+on chat:
+  cancel event
+  send formatted "<tooltip:&bClick to see Player's Profile><command:/profil %player%>&7[&b&l%player's display name%&7]<reset> &8:: &7%coloured message%" to all players
+
+command /clearchat [<text>]:
+  aliases: cc
+  trigger:
+    if arg 1 is set:
+      if arg 1 is "all":
+        if player has permission "andus.chatclear.all":
+          loop 100 times:
+            broadcast " "
+          broadcast "{@prefix} &7Chat has been &ccleared &7by &c%player%"
+      if arg 1 is "me":
+        loop 100 times:
+          send " " to player
+        send "{@prefix} &cYour &7chat has been cleared" to player
+    else:
+      send "{@prefix} &4&lClearChat Help"
+      send "&4&l/cc all &8- &7Clears global chat &c(&4andus.chatclear.all&c)" to player
+      send "&4&l/cc me &8- &7Clears your chat" to player
