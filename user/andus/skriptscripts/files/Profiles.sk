@@ -1,0 +1,44 @@
+options:
+    prefix: &9[&3Profiles&9]&r
+    profile: &9Profile of &3&l
+    laston: &aLast Online: &2&l
+    last: &cLast Offline: &4&l
+    time: &aPlay Time: &2&l
+    deaths: &cDeaths: &4&l
+
+command /profile [<offlineplayer>] [<text>]:
+    aliases: info, stats
+    trigger:
+        if arg 1 is not set:
+            set {_player} to the player
+        else:
+            set {_player} to arg 1
+        send "{@profile} %{_player}%", "{@laston} %{andus::profile::lastjoin::%{_player}%}%", "{@last} %{andus::profile::lastquit::%{_player}%}%", "{@time} %{andus::profile::time::%{_player}%::hour}% hours, %{andus::profile::time::%{_player}%::minute}% minutes and %{andus::profile::time::%{_player}%::second}% seconds" and "{@deaths} %{andus::profile::deaths::%{_player}%}%"
+
+every 1 second:
+    loop all players:
+        if {andus::profile::time::%loop-player%::second} is not set:
+            set {andus::profile::time::%loop-player%::second} to 1
+        else:
+            add 1 to {andus::profile::time::%loop-player%::second}
+            if {andus::profile::time::%loop-player%::second} is 60:
+                add 1 to {andus::profile::time::%loop-player%::minute}
+                set {andus::profile::time::%loop-player%::second} to 0
+            if {andus::profile::time::%loop-player%::minute} is 60:
+                add 1 to {andus::profile::time::%loop-player%::hour}
+                set {andus::profile::time::%loop-player%::minute} to 0
+        if {andus::profile::time::%loop-player%::minute} is not set:
+            set {andus::profile::time::%loop-player%::minute} to 0
+        if {andus::profile::time::%loop-player%::hour} is not set:
+            set {andus::profile::time::%loop-player%::hout} to 0
+        if {andus::profile::deaths::%loop-player%} is not set:
+            set {andus::profile::deaths::%loop-player%} to 0
+
+on join:
+    set {andus::profile::lastjoin::%player%} to now
+
+on quit:
+    set {andus::profile::lastquit::%player%} to now
+
+on death:
+    add 1 to {andus::profile::deaths::%victim%}

@@ -1,0 +1,31 @@
+options:
+    prefix: &7[&fWhitelist&7]&r
+    df-reason: &b[&3&lYourServer&b] &cUmm.. &bI don't think I know you.
+
+command /awhitelist [<text>] [<offlineplayer>]:
+    description: Whitelist by Andus
+    aliases: awl
+    trigger:
+        if player is a op:
+            if arg 1 is "add":
+                add arg 2 to {andus::whitelist::list::*}
+                send "{@prefix} &aAdded &bPlayer to Whitelist"
+            if arg 1 is "remove":
+                remove arg 2 from {andus::whitelist::list::*}
+                send "{@prefix} &cRemoved &bPlayer from Whitelist"
+            if arg 1 is "on":
+                set {andus::whitelist::status} to true
+                send "{@prefix} &b> &aWhitelist turned on"
+                set {andus::whitelist::reason} to "{@df-reason}"
+            if arg 1 is "off":
+                set {andus::whitelist::status} to false
+                send "{@prefix} &b> &cWhitelist turned off"
+                stop
+
+on connect:
+    if {andus::whitelist::status} is true:
+        if {andus::whitelist::list::*} doesn't contain "%player%":
+            kick player due to "%{andus::whitelist::reason}%"
+            stop
+        stop
+    stop
